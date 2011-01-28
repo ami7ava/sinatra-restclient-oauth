@@ -7,6 +7,19 @@
   </head>
   <body>
     <div id="container">
+			<% [:notice, :error].each do |n| %>
+				<% if flash.has?(n) %>
+					<div id="flash_<%= n %>">
+						<%= flash[n] %>
+					</div>
+				<% end %>
+			<% end %>
+	
+			<div id="menu">
+				<a href='/'>Providers</a>
+				<a href='/authorize'>Authorize</a>
+				<a href='/providers'>Make Requests</a>
+			</div>
       <%= yield %>
     </div>
   </body>

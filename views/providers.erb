@@ -1,0 +1,20 @@
+<h1>Providers</h1>
+<hr />
+
+<% unless @providers.empty? %>
+<table border="1" cellspacing="3" cellpadding="5" width="80%">
+	<tr><th width="30%">Title</th><th width="40%">Consumer Key</th><th width="30%"></th></tr>
+	<% @providers.each do |provider| %>
+		<tr>
+			<td><%= provider.title %></td>
+			<td><%= provider.consumer_key %></td>
+			<td align="center"><a href="#">Edit</a> / <a href="#">Delete</a> / <a href="#">Use</a></td>
+		</tr>
+	<% end %>
+</table>
+<p><a href='/providers/new'>Add a new provider</a></p>
+<% else %>
+	<div id="flash_notice">
+		Nothing here! Why not <a href='/providers/new'>add one?</a>
+	</div>
+<% end %>
