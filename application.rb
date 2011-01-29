@@ -4,7 +4,7 @@ DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/sinatra-restclient-oauth.db")
 class Provider
   include DataMapper::Resource
   
-  has n, :access_tokens
+  has 1, :access_token
   
   property :id,                   Serial
   property :title,                String
@@ -17,6 +17,12 @@ class Provider
   property :updated_at,           DateTime
   
   validates_presence_of :title, :consumer_key, :consumer_secret
+
+  def authorized?
+    if access_token
+      !(access_token.oauth_token.blank? && access_token.oauth_token_secret.blank?)
+    end
+  end
 end
 
 class AccessToken
@@ -43,11 +49,17 @@ class Application < Sinatra::Base
   get '/' do
     @providers = Provider.all
     
-    erb :providers
+    haml :providers
   end
   
   get '/providers/new' do
-    erb :new_provider
+    haml :new_provider
+  end
+
+  get '/providers/:id' do
+    @provider = Provider.get(params[:id])
+    
+    haml :show_provider
   end
   
   post '/providers' do
@@ -58,15 +70,47 @@ class Application < Sinatra::Base
       redirect '/'
     else
       flash[:error] = "There was a problem saving the provider."
-      erb :new_provider
+      haml :new_provider
     end
   end
   
-  get '/authorize' do
-    erb :authorize
+  post '/providers/:id/authorize' do
+    provider = Provider.get(params[:id])
+
+    consumer = OAuth::Consumer.new(provider.consumer_key, provider.consumer_secret,
+      :request_token_path => provider.request_token_url,
+      :access_token_path => provider.access_token_url,
+      :authorize_path => provider.authorize_url)
+    
+    callback_url = "http://sinatra-restclient-oauth.local:9292/providers/#{provider.id}/callback"
+    request_token = consumer.get_request_token(:oauth_callback => callback_url)
+    session[:request_token] = request_token
+    redirect request_token.authorize_url(:oauth_callback => callback_url)
   end
   
-  get '/request' do
+  get '/providers/:id/callback' do
+    provider = Provider.get(params[:id])
+    request_token = session[:request_token]
+    access_token = request_token.get_access_token
+    "#{access_token.token}--#{access_token.secret}"
+
+    provider.access_token = AccessToken.new(
+      :oauth_token => access_token.token,
+      :oauth_token_secret => access_token.secret)
     
+    if provider.save
+      flash[:notice] = "Hooray! #{provider.title} is authorized now."
+      redirect "/providers/#{provider.id}/console"
+    end
+  end
+
+  get '/providers/:id/console' do
+    @provider = Provider.get(params[:id])
+
+    consumer = OAuth::Consumer.new(@provider.consumer_key, @provider.consumer_secret)
+    access_token = @provider.access_token
+    session[:access_token] = OAuth::AccessToken.new(consumer, 
+      access_token.oauth_token, access_token.oauth_token_secret)
+    haml :console
   end
 end

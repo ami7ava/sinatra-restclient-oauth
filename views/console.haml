@@ -1,0 +1,29 @@
+%h1 Console: #{@provider.title}
+%hr
+
+#console
+  %form{"accept-charset" => "utf-8", :action => "/providers/#{@provider.id}/console", :method => "post"}
+    %p
+      %label{ :for => "request_method" } Method:
+      %br
+      %select#request_method{ :name => "request_method", :style => "width: 100px;" }
+        %option{ :value => 'GET' } GET
+        %option{ :value => 'POST' } POST
+        %option{ :value => 'PUT' } PUT
+        %option{ :value => 'DELETE' } DELETE
+    
+    %p
+      %label{ :for => "content_type" } Content Type:
+      %br
+      %select#content_type{ :name => "content_type", :style => "width: 100px;" }
+        %option{ :value => 'JSON' } JSON
+        %option{ :value => 'XML' } XML
+
+    %p
+      %label{:for => "path"} API Endpoint:
+      %br
+      %input#path{:name => "path", :size => "80", :type => "text"}
+
+    %p
+      %input{:type => "submit", :value => "Continue →"}/
+      %a{ :href => '/' } Cancel

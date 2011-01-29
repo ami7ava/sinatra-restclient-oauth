@@ -1,0 +1,26 @@
+%h1 Providers
+%hr
+
+- unless @providers.empty?
+  %table{ :border => "1", :cellspacing => "3", :cellpadding => "5", :width => "80%" }
+    %tr
+      %th{ :width => "30%" } Title
+      %th{ :width => "40%" } Consumer Key
+      %th{ :width => "30%" } &nbsp;
+    
+    - @providers.each do |provider|
+      %tr
+        %td= provider.title
+        %td= provider.consumer_key
+        %td
+          - if provider.authorized?
+            %a{ :href => "/providers/#{@provider.id}/console" } Console
+          %a{ :href => "/providers/#{provider.id}" } Show
+  
+  %p
+    %a{ :href => "/providers/new" } Add a new provider
+
+- else
+  #flash_notice
+    Nothing here! Why not
+    %a{ :href => "/providers/new" } add one?

@@ -1,0 +1,31 @@
+%h1 Add new provider
+%hr
+#new_provider
+  %form{"accept-charset" => "utf-8", :action => "/providers", :method => "post"}
+    %p
+      %label{:for => "provider_title"} Title:
+      %br
+      %input#provider_title{:name => "provider[title]", :size => "40", :type => "text"}
+    %p
+      %label{:for => "provider_consumer_key"} Consumer Key:
+      %br
+      %input#provider_consumer_key{:name => "provider[consumer_key]", :size => "60", :type => "text"}
+    %p
+      %label{:for => "provider_consumer_secret"} Consumer Secret:
+      %br
+      %input#provider_consumer_secret{:name => "provider[consumer_secret]", :size => "60", :type => "text"}
+    %p
+      %label{:for => "provider_request_token_url"} Request Token URL:
+      %br
+      %input#provider_request_token_url{:name => "provider[request_token_url]", :size => "80", :type => "text"}
+    %p
+      %label{:for => "provider_authorize_url"} Provider Authorize URL:
+      %br
+      %input#provider_authorize_url{:name => "provider[authorize_url]", :size => "80", :type => "text"}
+    %p
+      %label{:for => "provider_access_token_url"} Provider Access Token URL:
+      %br
+      %input#provider_access_token_url{:name => "provider[access_token_url]", :size => "80", :type => "text"}
+    %p
+      %input{:type => "submit", :value => "Continue →"}/
+      %a{ :href => '/' } Cancel

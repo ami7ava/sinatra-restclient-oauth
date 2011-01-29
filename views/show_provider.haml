@@ -1,0 +1,32 @@
+%h1 Provider: #{@provider.title}
+%hr
+
+%div
+  %p
+    %strong Consumer Key:
+    %br
+    = @provider.consumer_key
+  %p
+    %strong Consumer Secret:
+    %br
+    = @provider.consumer_secret
+  %p
+    %strong Request Token URL:
+    %br
+    = @provider.request_token_url
+  %p
+    %strong Provider Authorize URL:
+    %br
+    = @provider.authorize_url
+  %p
+    %strong Provider Access Token URL:
+    %br
+    = @provider.access_token_url
+
+%form{"accept-charset" => "utf-8", :action => "/providers/#{@provider.id}/authorize", :method => "post"}
+  %p
+    - if @provider.authorized?
+      %a{ :href => "/providers/#{@provider.id}/console" } Console
+    -else
+      %input{:type => "submit", :value => "Authorize"}/
+    %a{ :href => '/' } Back

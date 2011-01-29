@@ -1,0 +1,15 @@
+!!! Strict
+%html{html_attrs}
+
+  %head
+    %title = ":)"
+    %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8" }
+    %link{ :rel=> "stylesheet", :type => "text/css", :href => "/css/main.css" }
+
+  %body
+    #container
+      - [:notice, :error].each do |n|
+        - if flash.has?(n)
+          %div{ :id => "flash_#{n}" }= flash[n]
+      
+      = yield
