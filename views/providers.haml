@@ -14,7 +14,7 @@
         %td= provider.consumer_key
         %td
           - if provider.authorized?
-            %a{ :href => "/providers/#{@provider.id}/console" } Console
+            %a{ :href => "/providers/#{provider.id}/console" } Console
           %a{ :href => "/providers/#{provider.id}" } Show
   
   %p
